@@ -3,21 +3,15 @@
 
 /* Constructors */
 
-/// <summary>
-/// Empty default constructor. Do not use.
-/// </summary>
 IfGame::IfGame() { }
-
-/// <summary>
-/// Creates the If Game screen and all of its components
-/// </summary>
-/// <param name="window">The window this screen is a part of</param>
-/// <param name="font">The font to use for all texts</param>
 IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
-	/* Pass vectors by reference
-	 * Use vector<>.reserve to reserve enough space beforehand
-	 * Use vector<>.emplace_back(args) instead of push_back to add new objects */
 	gameInProgress = false;
+
+	// Reserve space for vectors to avoid resizing and copying during runtime
+	buttons.reserve(15);
+	texts.reserve(20);
+	sprites.reserve(5);
+	shapes.reserve(10);
 
 	sf::Vector2u screenSize = window.getSize();
 	sf::Vector2u screenMiddle(screenSize.x / 2, screenSize.y / 2);
@@ -26,20 +20,19 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 
 	// Default values for things to be set later
 	lowerBound = -1000;
-	upperBound = -1000;
 	threshold = -1000;
 	correctThresholdIndex = -1;
 	correctOperatorIndex = -1;
 	boolOp = None;
 	
 	// Header text
-	addText(sf::Text("Match The Range", font, headerFontSize));
+	addText("Match The Range", font, headerFontSize);
 	texts.at(0).setPosition((int)(screenMiddle.x - texts.at(0).getGlobalBounds().width / 2), 20);
 
 	// Start button
 	sf::Vector2f buttonSize(100, 35);
 	sf::Vector2f buttonPos((int)(screenMiddle.x - buttonSize.x / 2), (int)(screenSize.y - buttonSize.y - 20));
-	addButton(Button(this, 0, "Start Game", font, buttonPos, buttonSize));
+	addButton("Start Game", buttonPos, buttonSize, font);
 
 	// Play area background
 	sf::Shape* shapePtr = new sf::RectangleShape(sf::Vector2f(615, 575));
@@ -55,13 +48,12 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 		std::cout << "Could not load number line texture\n";
 		return;
 	}
-	addSprite(sf::Sprite());
-	sprites.at(0).setTexture(numLineTexture);
+	addSprite(numLineTexture);
 	sprites.at(0).setPosition(32, 600);
 
 	// Number line text
 	for (int i = 1; i < 16; i++) {
-		addText(sf::Text("", font, regularFontSize));
+		addText("", font, regularFontSize);
 		setNumberLineTextPosition(texts.at(i), i - 1);
 	}
 
@@ -94,39 +86,36 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	int buttonID = 1;
 	sf::Vector2f size(50, 35);
 	sf::Vector2f offset(17, 7);
-	thresholds = std::vector<int>();
-	operators = std::vector<int>();
+	thresholdOptionIndexes = std::vector<int>();
+	operatorOptionIndexes = std::vector<int>();
 	for (int i = 0; i < 6; i++) {
 		int posX = (buttonContainerPos.x + 10) + ((size.x + 10) * i);
 		int posY = screenSize.y / 2 + 105;
-		addButton(Button(this, buttonID, "", font, sf::Vector2f(posX, posY), size));
+		addButton("", sf::Vector2f(posX, posY), size, font);
 		buttons.at(buttonID).setTextOffset(offset);
-		thresholds.push_back(buttonID);
+		thresholdOptionIndexes.push_back(buttonID);
 		buttonID++;
 		posY += size.y + 10;
-		addButton(Button(this, buttonID, "", font, sf::Vector2f(posX, posY), size));
+		addButton("", sf::Vector2f(posX, posY), size, font);
 		buttons.at(buttonID).setTextOffset(offset);
-		operators.push_back(buttonID);
+		operatorOptionIndexes.push_back(buttonID);
 		buttonID++;
 	}
 }
 
 
 /* Destructor */
+
 IfGame::~IfGame() { }
 
 
 /* Screen overrides */
 
-/// <summary>
-/// Defines what to do for specific button IDs. Should be called by a button using its parent member.
-/// </summary>
-/// <param name="id">The ID of the button that was clicked</param>
 void IfGame::clickButton(int id) {
 	if (id == 0) // Start Game button
 		startGame();
 	else if (id >= 1 && id <= 12 && gameInProgress) { // Answer choice button
-		if (id == thresholds.at(correctThresholdIndex) || id == operators.at(correctOperatorIndex))
+		if (id == thresholdOptionIndexes.at(correctThresholdIndex) || id == operatorOptionIndexes.at(correctOperatorIndex))
 			std::cout << "Correct!" << std::endl;
 	}
 	else // Button with no function
@@ -136,10 +125,6 @@ void IfGame::clickButton(int id) {
 
 /* Helper functions */
 
-/// <summary>
-/// Generates random wrong answer choices for the thresholds and operators within their respective 
-/// ranges and sets the corresponding button's text. Two choices will not be random as they are correct.
-/// </summary>
 void IfGame::generateChoices() {
 	std::vector<int> curThresholds;
 	std::vector<BoolOperator> curOperators;
@@ -164,7 +149,7 @@ void IfGame::generateChoices() {
 			curThresholds.push_back(dummyThreshold);
 		}
 		// Set the button text for the corresponding threshold button
-		int index = thresholds.at(i);
+		int index = thresholdOptionIndexes.at(i);
 		buttons.at(index).setText(buttonText);
 
 		// Generate bool operator buttons text
@@ -185,15 +170,14 @@ void IfGame::generateChoices() {
 			curOperators.push_back(dummyOperator);
 		}
 		// Set the button text for the corresponding operator button
-		index = operators.at(i);
+		index = operatorOptionIndexes.at(i);
 		buttons.at(index).setText(buttonText);
 	}
 }
 
-
 void IfGame::populateNumberLine() {
-	if (lowerBound < -99) {
-		std::cout << "Bounds not set, can't populate number line.\n";
+	if (lowerBound < -99 || lowerBound > 84) {
+		std::cout << "Bounds not set properly, can't populate number line.\n";
 		return;
 	}
 
@@ -202,7 +186,6 @@ void IfGame::populateNumberLine() {
 		setNumberLineTextPosition(texts.at(i), i - 1);
 	}
 }
-
 
 void IfGame::createAnswerLine() {
 	sf::RectangleShape* leftRect = dynamic_cast<sf::RectangleShape*>(shapes.at(1));
@@ -245,18 +228,12 @@ void IfGame::createAnswerLine() {
 		circle->setFillColor(sf::Color::Transparent);
 }
 
-
 void IfGame::setNumberLineTextPosition(sf::Text& text, int index) {
-	// Number Line Centers: {32 + 42 * index}
+	int numLineCenter = 32 + (42 * index);
 	int textCenterX = (text.getGlobalBounds().width / 2);
-	int x = 32 + (42 * index) - textCenterX;
-	int y = 620;
-	text.setPosition(x, y);
+	text.setPosition(numLineCenter - textCenterX, 620);
 }
 
-/// <summary>
-/// Returns a string representing the given BoolOperator type
-/// </summary>
 std::string IfGame::BoolOperatorToString(BoolOperator op) const {
 	switch (op) {
 		case LessThan:
@@ -279,24 +256,17 @@ std::string IfGame::BoolOperatorToString(BoolOperator op) const {
 
 /* Public functions */
 
-/// <summary>
-/// Starts the game
-/// </summary>
 void IfGame::startGame() {
 	std::cout << "Starting game!\n";
 
 	startRound();
 }
 
-/// <summary>
-/// Starts a round in the game
-/// </summary>
 void IfGame::startRound() {
 	gameInProgress = true;
 
 	std::srand(std::time(0));
 	lowerBound = std::rand() % 184 - 99;
-	upperBound = lowerBound + 15;
 	threshold = lowerBound + std::rand() % 14 + 1;
 	boolOp = (BoolOperator)(std::rand() % 6 + 1);
 
@@ -304,9 +274,6 @@ void IfGame::startRound() {
 	correctOperatorIndex = std::rand() % 6;
 	std::string buttonText;
 	generateChoices();
-
-	// TODO: Draw the number line given the lower and upper bounds
 	populateNumberLine();
-	// TODO: Draw the answer line given the bounds, threshold, and boolean operator
 	createAnswerLine();
 }
