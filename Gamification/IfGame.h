@@ -4,16 +4,10 @@
 #include <cstdlib>
 #include <ctime>
 #include "Screen.h"
-
-enum BoolOperator {
-	None,
-	LessThan,
-	LessThanOrEqualTo,
-	GreaterThan,
-	GreaterThanOrEqualTo,
-	NotEqualTo,
-	EqualTo
-};
+#include "BoolOperatorNames.h"
+#include "AnswerLine.h"
+#include "IfAnswerText.h"
+#include "IfInfoContainer.h"
 
 class IfGame : public Screen {
 	private:
@@ -21,13 +15,28 @@ class IfGame : public Screen {
 		int lowerBound;
 		int threshold;
 		BoolOperator boolOp;
-		int correctThresholdIndex;
-		int correctOperatorIndex;
-
+		
 		std::vector<int> thresholdOptionIndexes;
+		int correctThresholdIndex;
+		int playerThresholdID;
+
 		std::vector<int> operatorOptionIndexes;
+		int correctOperatorIndex;
+		int playerOperatorID;
 
 		sf::Texture numLineTexture;
+		AnswerLine answerLine;
+		IfAnswerText answerText;
+		IfInfoContainer info;
+
+		float roundDelay;
+		float delayRemaining;
+		int currentLevel;
+		int maxLevels;
+		int score;
+		int lives;
+
+		void addBlankOptionButton(int buttonID, int posX, int posY, sf::Font& font);
 
 		/// <summary>
 		/// Generates random wrong answer choices for the thresholds and operators within their respective 
@@ -45,6 +54,8 @@ class IfGame : public Screen {
 		/// </summary>
 		void createAnswerLine();
 
+		void submitAnswer();
+
 		/// <summary>
 		/// Adjusts each text object underneath the number line so they appear centered.
 		/// </summary>
@@ -56,6 +67,26 @@ class IfGame : public Screen {
 		/// Returns a string representing the given BoolOperator type.
 		/// </summary>
 		std::string BoolOperatorToString(BoolOperator op) const;
+
+		/// <summary>
+		/// Starts the game.
+		/// </summary>
+		void startGame();
+
+		void endGame(bool finished);
+
+		/// <summary>
+		/// Starts a round in the game.
+		/// </summary>
+		void startRound();
+
+		void changeOutlineColors(sf::Color& color);
+
+		void onCorrect();
+
+		void onWrong();
+
+		void reset();
 	public:
 		/// <summary>
 		/// Empty default constructor. Do not use.
@@ -77,15 +108,9 @@ class IfGame : public Screen {
 		/// <param name="id">: The ID of the button that was clicked.</param>
 		virtual void clickButton(int id) override;
 
-		/// <summary>
-		/// Starts the game.
-		/// </summary>
-		void startGame();
+		virtual void update(const float dt, sf::RenderWindow& window) override;
 
-		/// <summary>
-		/// Starts a round in the game.
-		/// </summary>
-		void startRound();
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 #endif
