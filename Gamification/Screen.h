@@ -3,18 +3,16 @@
 
 #include <vector>
 #include "Button.h"
+#include "Container.h"
 
 class Button;
+class Container;
 class Screen : public sf::Drawable {
 	protected:
 		std::vector<Button> buttons;
 		std::vector<sf::Text> texts;
 		std::vector<sf::Sprite> sprites;
-		std::vector<sf::Shape*> shapes;
-
-		sf::Color yellow;
-		sf::Color green;
-		sf::Color red;
+		std::vector<Container> containers;
 
 		/// <summary>
 		/// Creates and adds a button to the end of the buttons list. Implicitly passes the calling screen
@@ -50,12 +48,13 @@ class Screen : public sf::Drawable {
 		/// Adds a shape object to the end of the shapes list.
 		/// </summary>
 		/// <param name="shape">: A pointer to the shape object to add.</param>
-		void addShape(sf::Shape* shape);
+		void addContainer(Screen* parent);
 	public:
-		/// <summary>
-		/// Initializes common members.
-		/// </summary>
-		Screen();
+		static sf::Color blue;
+		static sf::Color yellow;
+		static sf::Color green;
+		static sf::Color red;
+		static sf::Color containerGray;
 
 		/// <summary>
 		/// Releases memory held by the shapes vector.
@@ -72,8 +71,16 @@ class Screen : public sf::Drawable {
 		/// Sends event updates to screen elements. Can be overriden.
 		/// </summary>
 		/// <param name="e">: The event that has occured.</param>
-		/// <param name="window">: The window in which the event has occured.</param>
+		/// <param name="window">: The window this screen is a part of.</param>
 		virtual void update(sf::Event& e, sf::RenderWindow& window);
+
+		/// <summary>
+		/// Used to update screen elements that are dependent on the time elapsed.
+		/// Should be called every frame to be accurate.
+		/// </summary>
+		/// <param name="dt">: The time elapsed since the previous frame.</param>
+		/// <param name="window">: The window this screen is a part of.</param>
+		virtual void update(const float dt, sf::RenderWindow& window) = 0;
 
 		/// <summary>
 		/// Draws all the elements on the screen. Can be overriden to change the order 
