@@ -6,6 +6,7 @@
 Button::Button() { }
 
 Button::Button(Screen* screen, int id, std::string str, sf::Vector2f position, sf::Vector2f size, sf::Font& font, unsigned int fontSize) {
+	show();
 	state = Normal;
 	normalColor = sf::Color(79, 79, 79);
 	hoveredColor = sf::Color(68, 68, 68);
@@ -42,6 +43,10 @@ void Button::setTextOffset(sf::Vector2f newOffset) {
 }
 
 
+/* Getters */
+
+std::string Button::getText() const { return text.getString(); }
+
 /* Protected functions */
 
 void Button::onNormal() {
@@ -61,6 +66,9 @@ void Button::onClick() {
 /* Overriden functions */
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (!toDraw)
+		return;
+
 	target.draw(background, states);
 	target.draw(text, states);
 }
@@ -76,6 +84,10 @@ void Button::setPosition(float x, float y) {
 /* Other functions */
 
 void Button::update(sf::Event& e, sf::RenderWindow& window) {
+	// Only update the button if it is to be rendered
+	if (!toDraw)
+		return;
+
 	ButtonState newState = state;
 
 	// Sets the button to its normal state when the cursor is not within its boundary

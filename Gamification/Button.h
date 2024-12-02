@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <SFML/Graphics.hpp>
+#include "Hideable.h"
 #include <string>
 #include "Screen.h"
 
@@ -13,7 +13,7 @@ enum ButtonState {
 	Clicked
 };
 
-class Button : public sf::Drawable {
+class Button : public Hideable {
 	private:
 		ButtonState state;
 
@@ -80,6 +80,8 @@ class Button : public sf::Drawable {
 		/// </summary>
 		/// <param name="newOffset">The new text offset to be applied.</param>
 		void setTextOffset(sf::Vector2f newOffset);
+
+		std::string getText() const;
 
 		/// <summary>
 		/// Draws the components that make up this button.
