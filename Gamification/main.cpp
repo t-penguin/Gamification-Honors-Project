@@ -24,10 +24,16 @@ void RunWindow(sf::RenderWindow& window) {
         return;
     }
 
+    Screen* currentScreen = nullptr;
     IfGame ifGameScreen(window, font);
+    currentScreen = &ifGameScreen;
 
+    sf::Clock clock;
+    window.setFramerateLimit(60);
     while (window.isOpen())
     {
+        sf::Time deltaTime = clock.restart();
+        currentScreen->update(deltaTime.asSeconds(), window);
         /* Polls for all of the window's events that were triggered since the last iteration of the loop
          * Necessary for the window to be responsive and should be done at the beginning of the loop */
         sf::Event event;
@@ -39,19 +45,19 @@ void RunWindow(sf::RenderWindow& window) {
                     window.close();
                     break;
                 case sf::Event::MouseMoved:
-                    ifGameScreen.update(event, window);
+                    currentScreen->update(event, window);
                     break;
                 case sf::Event::MouseButtonPressed:
-                    ifGameScreen.update(event, window);
+                    currentScreen->update(event, window);
                     break;
                 case sf::Event::MouseButtonReleased:
-                    ifGameScreen.update(event, window);
+                    currentScreen->update(event, window);
                     break;
             }
         }
 
         window.clear();
-        window.draw(ifGameScreen);
+        window.draw(*currentScreen);
         window.display();
     }
 }
