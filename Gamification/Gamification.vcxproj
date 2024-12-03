@@ -137,14 +137,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnswerLine.cpp" />
+    <ClCompile Include="AnswerText.cpp" />
+    <ClCompile Include="Container.cpp" />
+    <ClCompile Include="IfAnswerText.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="IfGame.cpp" />
+    <ClCompile Include="IfInfoContainer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Screen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnswerLine.h" />
+    <ClInclude Include="AnswerText.h" />
+    <ClInclude Include="BoolOperatorNames.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Container.h" />
+    <ClInclude Include="Hideable.h" />
+    <ClInclude Include="IfAnswerText.h" />
     <ClInclude Include="IfGame.h" />
+    <ClInclude Include="IfInfoContainer.h" />
     <ClInclude Include="Screen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
