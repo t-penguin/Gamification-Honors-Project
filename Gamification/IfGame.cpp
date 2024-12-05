@@ -9,17 +9,10 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	maxLevels = 20;
 	roundDelay = 0.3f;
 	delayRemaining = roundDelay;
-
-	// Reserve space for vectors to avoid resizing and copying during runtime
-	buttons.reserve(15);
-	texts.reserve(20);
-	sprites.reserve(5);
-	containers.reserve(5);
-
 	sf::Vector2u screenSize = window.getSize();
 	sf::Vector2u screenMiddle(screenSize.x / 2, screenSize.y / 2);
-	int headerFontSize = 30;
-	int regularFontSize = 15;
+	sf::Vector2f size;
+	sf::Vector2f pos;
 
 	// Default values for things to be set later
 	lowerBound = -1000;
@@ -27,30 +20,51 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	correctThresholdIndex = -1;
 	correctOperatorIndex = -1;
 	boolOp = None;
+
+	// Reserve space for vectors to avoid resizing and copying during runtime
+	buttons.reserve(5);
+	texts.reserve(5);
+	sprites.reserve(5);
+	containers.reserve(5);
+
+	// Initialize Container pointers
+	playArea = nullptr;
+	howTo = nullptr;
+	choiceButtons = nullptr;
+
+	pos.x = screenSize.x * 3 / 4 - 185;
+	pos.y = screenSize.y / 2 + 70;
+	addContainer(sf::Vector2f(615, 575), sf::Vector2f(20, 70));
+	addContainer(sf::Vector2f(615, 345), sf::Vector2f(screenMiddle.x + 10, 70));
+	addContainer(sf::Vector2f(370, 100), pos);
+	playArea = &containers.at(0);
+	howTo = &containers.at(1);
+	choiceButtons = &containers.at(2);
+
+	int headerFontSize = 30;
+	int regularFontSize = 15;
 	
 	// Header text
 	addText("Match The Range", font, headerFontSize);
 	texts.at(0).setPosition((int)(screenMiddle.x - texts.at(0).getGlobalBounds().width / 2), 15);
 
 	// Start button
-	sf::Vector2f buttonSize(100, 35);
-	sf::Vector2f buttonPos((int)(screenMiddle.x - buttonSize.x / 2), (int)(screenSize.y - buttonSize.y - 20));
-	addButton("Start Game", buttonPos, buttonSize, font);
+	size.x = 100;
+	size.y = 35;
+	pos.x = (int)(screenMiddle.x - size.x / 2);
+	pos.y = (int)(screenSize.y - size.y - 20);
+	addButton("Start Game", pos, size, font);
 
 	// Submit Button
-	buttonSize = sf::Vector2f(75, 35);
-	buttonPos = sf::Vector2f(1040, 533);
-	addButton("Submit", buttonPos, buttonSize, font);
+	size.x = 75;
+	pos.x = 1040;
+	pos.y = 578;
+	addButton("Submit", pos, size, font);
 	buttons.at(1).hide();
 
 	// Play area background
-	addContainer(this);
-	containers.at(0).setSize(615, 575);
-	containers.at(0).setOutlineThickness(3);
-	containers.at(0).setOutlineColor(yellow);
-	containers.at(0).setFillColor(containerGray);
-	containers.at(0).setPosition(sf::Vector2f(20, 70));
-	containers.at(0).show();
+	playArea->setOutlineColor(yellow);
+	playArea->show();
 
 	// Number line image
 	numLineTexture = sf::Texture();
@@ -70,23 +84,18 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	answerLine = AnswerLine();
 
 	// Answer choice buttons container
-	sf::Vector2f buttonContainerPos(screenSize.x * 3 / 4 - 185, screenSize.y / 2);
-	addContainer(this);
-	containers.at(1).setSize(370, 100);
-	containers.at(1).setOutlineThickness(3);
-	containers.at(1).setOutlineColor(blue);
-	containers.at(1).setFillColor(containerGray);
-	containers.at(1).setPosition(buttonContainerPos);
+	choiceButtons->hide();
 
 	// Answer choice buttons
 	int buttonID = 2;
 	
 	thresholdOptionIndexes.reserve(6);
 	operatorOptionIndexes.reserve(6);
-	containers.at(1).reserveSizeForButtons(12);
+	choiceButtons->reserveSizeForButtons(12);
+	pos = choiceButtons->getPosition();
 	for (int i = 0; i < 6; i++) {
-		int posX = (buttonContainerPos.x + 10) + ((60) * i);
-		int posY = buttonContainerPos.y + 10;
+		int posX = (pos.x + 10) + ((60) * i);
+		int posY = pos.y + 10;
 		
 		// Treshold buttons
 		addBlankOptionButton(buttonID, posX, posY, font);
@@ -105,8 +114,18 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	answerText = IfAnswerText(font);
 	answerText.hide();
 
+	// Game Data Info Container
 	info = IfInfoContainer(this, font);
 	info.hide();
+
+	// Game How To Container
+	sf::Text* curText = nullptr;
+	size = howTo->getSize();
+	pos = howTo->getPosition();
+	howTo->hide();
+	howTo->addText("How To Play", font, headerFontSize - 5);
+	curText = &howTo->getTextAt(0);
+	curText->setPosition(pos.x + (int)(size.x / 2 - curText->getGlobalBounds().width / 2), pos.y + 10);
 }
 
 
@@ -137,7 +156,7 @@ void IfGame::clickButton(int id) {
 
 	// Threshold buttons
 	if (id >= 2 && id <= 13) {
-		std::string txt = containers.at(1).getButtonAt(id - 2).getText();
+		std::string txt = choiceButtons->getButtonAt(id - 2).getText();
 
 		if (id % 2 == 0) {
 			answerText.setThreshold(txt);
@@ -192,8 +211,8 @@ void IfGame::addBlankOptionButton(int buttonID, int posX, int posY, sf::Font& fo
 	sf::Vector2f size(50, 35);
 	sf::Vector2f offset(17, 7);
 
-	containers.at(1).addButton("", buttonID, sf::Vector2f(posX, posY), size, font);
-	curButton = &containers.at(1).getButtonAt(buttonID - 2);
+	choiceButtons->addButton("", buttonID, sf::Vector2f(posX, posY), size, font);
+	curButton = &choiceButtons->getButtonAt(buttonID - 2);
 	curButton->show();
 	curButton->setTextOffset(offset);
 }
@@ -223,7 +242,7 @@ void IfGame::generateChoices() {
 		}
 		// Set the button text for the corresponding threshold button
 		int index = thresholdOptionIndexes.at(i);
-		containers.at(1).getButtonAt(index).setText(buttonText);
+		choiceButtons->getButtonAt(index).setText(buttonText);
 
 		// Generate bool operator buttons text
 		if (i == correctOperatorIndex) { // Use the correct operator answer for this index
@@ -244,7 +263,7 @@ void IfGame::generateChoices() {
 		}
 		// Set the button text for the corresponding operator button
 		index = operatorOptionIndexes.at(i);
-		containers.at(1).getButtonAt(index).setText(buttonText);
+		choiceButtons->getButtonAt(index).setText(buttonText);
 	}
 }
 
@@ -342,6 +361,7 @@ void IfGame::startGame() {
 	info.updateLives(lives);
 	info.setOutlineColor(Screen::blue);
 	info.show();
+	choiceButtons->show();
 	startRound();
 }
 
@@ -377,8 +397,9 @@ void IfGame::startRound() {
 void IfGame::changeOutlineColors(sf::Color& color) {
 	answerText.setOutlineColor(color);
 	info.setOutlineColor(color);
-	containers.at(0).setOutlineColor(color);	// Play Area
-	containers.at(1).setOutlineColor(color);	// Buttons Container
+	playArea->setOutlineColor(color);
+	howTo->setOutlineColor(color);
+	choiceButtons->setOutlineColor(color);
 }
 
 void IfGame::onCorrect() { changeOutlineColors(Screen::green); }
@@ -390,6 +411,7 @@ void IfGame::reset() {
 	answerText.reset();
 	answerText.show();
 	info.setOutlineColor(Screen::blue);
-	containers.at(0).setOutlineColor(Screen::yellow);	// Play Area
-	containers.at(1).setOutlineColor(Screen::blue);		// Buttons Container
+	playArea->setOutlineColor(Screen::yellow);
+	howTo->setOutlineColor(Screen::blue);
+	choiceButtons->setOutlineColor(Screen::blue);
 }

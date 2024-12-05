@@ -28,6 +28,9 @@ class IfGame : public Screen {
 		AnswerLine answerLine;
 		IfAnswerText answerText;
 		IfInfoContainer info;
+		Container* playArea;
+		Container* choiceButtons;
+		Container* howTo;
 
 		float roundDelay;
 		float delayRemaining;
