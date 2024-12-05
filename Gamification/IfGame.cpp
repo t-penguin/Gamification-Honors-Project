@@ -21,12 +21,6 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	correctOperatorIndex = -1;
 	boolOp = None;
 
-	// Reserve space for vectors to avoid resizing and copying during runtime
-	buttons.reserve(5);
-	texts.reserve(5);
-	sprites.reserve(5);
-	containers.reserve(5);
-
 	// Initialize Container pointers
 	playArea = nullptr;
 	howTo = nullptr;
@@ -38,8 +32,11 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	addContainer(sf::Vector2f(615, 345), sf::Vector2f(screenMiddle.x + 10, 70));
 	addContainer(sf::Vector2f(370, 100), pos);
 	playArea = &containers.at(0);
+	playArea->show();
 	howTo = &containers.at(1);
+	howTo->show();
 	choiceButtons = &containers.at(2);
+	choiceButtons->hide();
 
 	int headerFontSize = 30;
 	int regularFontSize = 15;
@@ -62,10 +59,6 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	addButton("Submit", pos, size, font);
 	buttons.at(1).hide();
 
-	// Play area background
-	playArea->setOutlineColor(yellow);
-	playArea->show();
-
 	// Number line image
 	numLineTexture = sf::Texture();
 	if (!numLineTexture.loadFromFile("NumberLine.png")) {
@@ -83,12 +76,8 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 
 	answerLine = AnswerLine();
 
-	// Answer choice buttons container
-	choiceButtons->hide();
-
 	// Answer choice buttons
 	int buttonID = 2;
-	
 	thresholdOptionIndexes.reserve(6);
 	operatorOptionIndexes.reserve(6);
 	choiceButtons->reserveSizeForButtons(12);
@@ -122,16 +111,37 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	sf::Text* curText = nullptr;
 	size = howTo->getSize();
 	pos = howTo->getPosition();
-	howTo->hide();
 	howTo->addText("How To Play", font, headerFontSize - 5);
 	curText = &howTo->getTextAt(0);
-	curText->setPosition(pos.x + (int)(size.x / 2 - curText->getGlobalBounds().width / 2), pos.y + 10);
+	curText->setPosition(pos.x + (int)(size.x / 2 - curText->getGlobalBounds().width / 2), pos.y + 5);
+	std::string txt = "Create an if-statement that matches the range that will appear on the left using\n"
+		"the buttons that will show up below. The top row of buttons will be for the\n"
+		"threshold value. This is the value that will line up with the range's circle. If the\n"
+		"circle is filled in (closed), then you want to include the threshold value using an\n"
+		"operator that has an equal sign ('<=', '>=', '=='). If the circle is empty (open),\n"
+		"then you want to exclude the threshold value using one of the other operators\n"
+		"('<', '>', or '!='). To figure out which operator to use, keep in mind that you want\n"
+		"to include the blue side, and exclude the red side. You should also know what\n"
+		"each operator means:\n"
+		"\t\t'<' : Less Than\t\t\t   '<=' : Less Than OR Equal To\n"
+		"\t\t'>' : Greater Than\t\t   '>= : Greater Than OR Equal To\n"
+		"\t\t'!=' : NOT Equal To\t\t '==' : Equal To\n"
+		"There are 20 levels. The line starts slow but gets progressively faster. You get\n"
+		"3 lives, so think carefully! Keep practicing until you master this game before\n"
+		"moving on to the more difficult games. Good luck, you got this!";
+	howTo->addText(txt, font, 17);
+	curText = &howTo->getTextAt(1);
+	curText->setPosition(pos.x + 10, pos.y + 40);
 }
 
 
 /* Destructor */
 
-IfGame::~IfGame() { }
+IfGame::~IfGame() {
+	delete playArea;
+	delete choiceButtons;
+	delete howTo;
+}
 
 
 /* Screen overrides */
@@ -197,6 +207,9 @@ void IfGame::update(const float dt, sf::RenderWindow& window) {
 }
 
 void IfGame::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (!active)
+		return;
+
 	answerText.draw(target, states);
 	Screen::draw(target, states);
 	answerLine.draw(target, states);
@@ -359,7 +372,7 @@ void IfGame::startGame() {
 	info.updateScore(score);
 	lives = 3;
 	info.updateLives(lives);
-	info.setOutlineColor(Screen::blue);
+	info.setOutlineColor(Screen::defaultBorder);
 	info.show();
 	choiceButtons->show();
 	startRound();
@@ -402,16 +415,16 @@ void IfGame::changeOutlineColors(sf::Color& color) {
 	choiceButtons->setOutlineColor(color);
 }
 
-void IfGame::onCorrect() { changeOutlineColors(Screen::green); }
+void IfGame::onCorrect() { changeOutlineColors(Screen::trueColor); }
 
-void IfGame::onWrong() { changeOutlineColors(Screen::red); }
+void IfGame::onWrong() { changeOutlineColors(Screen::falseColor); }
 
 void IfGame::reset() {
 	answerLine.reset();
 	answerText.reset();
 	answerText.show();
-	info.setOutlineColor(Screen::blue);
-	playArea->setOutlineColor(Screen::yellow);
-	howTo->setOutlineColor(Screen::blue);
-	choiceButtons->setOutlineColor(Screen::blue);
+	info.setOutlineColor(Screen::defaultBorder);
+	playArea->setOutlineColor(Screen::defaultBorder);
+	howTo->setOutlineColor(Screen::defaultBorder);
+	choiceButtons->setOutlineColor(Screen::defaultBorder);
 }
