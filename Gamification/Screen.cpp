@@ -1,17 +1,18 @@
 #include "Screen.h"
 
-sf::Color Screen::blue = sf::Color(31, 99, 185);			// #1F63B9
-sf::Color Screen::yellow = sf::Color(238, 171, 66);			// #DEAB42
-sf::Color Screen::green = sf::Color(128, 174, 54);			// #80AE36
-sf::Color Screen::red = sf::Color(254, 44, 47);				// #FE2C2F
+sf::Color Screen::defaultBorder = sf::Color(230, 159, 0);	// #E69F00
+sf::Color Screen::trueColor = sf::Color(0, 90, 181);		// #005AB5
+sf::Color Screen::falseColor = sf::Color(220, 50, 32);		// #DC3220
 sf::Color Screen::containerGray = sf::Color(20, 20, 20);	// #141414
 
+/* Constructor */
 
-
-/* Destructor */
-
-Screen::~Screen() {
-	
+Screen::Screen() {
+	// Reserve space for vectors to avoid resizing and copying during runtime
+	buttons.reserve(5);
+	texts.reserve(5);
+	sprites.reserve(5);
+	containers.reserve(5);
 }
 
 
@@ -30,9 +31,15 @@ void Screen::addSprite(sf::Texture& texture) { sprites.emplace_back(texture); }
 void Screen::addContainer(const sf::Vector2f& size, const sf::Vector2f& pos) { containers.emplace_back(this, size, pos); }
 
 
-/* Public virtual functions */
+/* Public functions */
+
+void Screen::setActive(bool state) { active = state; }
+bool Screen::getActive() const { return active; }
 
 void Screen::update(sf::Event& e, sf::RenderWindow& window) {
+	if (!active)
+		return;
+
 	for (Button& b : buttons)
 		b.update(e, window);
 
@@ -41,6 +48,9 @@ void Screen::update(sf::Event& e, sf::RenderWindow& window) {
 }
 
 void Screen::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (!active)
+		return;
+
 	for (const Container& c : containers)
 		c.draw(target, states);
 	

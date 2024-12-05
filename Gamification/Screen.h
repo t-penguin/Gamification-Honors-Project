@@ -9,6 +9,7 @@ class Button;
 class Container;
 class Screen : public sf::Drawable {
 	protected:
+		bool active;
 		std::vector<Button> buttons;
 		std::vector<sf::Text> texts;
 		std::vector<sf::Sprite> sprites;
@@ -49,16 +50,15 @@ class Screen : public sf::Drawable {
 		/// </summary>
 		void addContainer(const sf::Vector2f& size, const sf::Vector2f& pos);
 	public:
-		static sf::Color blue;
-		static sf::Color yellow;
-		static sf::Color green;
-		static sf::Color red;
+		static sf::Color defaultBorder;
+		static sf::Color trueColor;
+		static sf::Color falseColor;
 		static sf::Color containerGray;
 
-		/// <summary>
-		/// Releases memory held by the shapes vector.
-		/// </summary>
-		~Screen();
+		Screen();
+
+		void setActive(bool state);
+		bool getActive() const;
 
 		/// <summary>
 		/// Executes an action based on the ID of the button that is clicked. Pure virtual function
@@ -79,7 +79,7 @@ class Screen : public sf::Drawable {
 		/// </summary>
 		/// <param name="dt">: The time elapsed since the previous frame.</param>
 		/// <param name="window">: The window this screen is a part of.</param>
-		virtual void update(const float dt, sf::RenderWindow& window) = 0;
+		virtual void update(const float dt, sf::RenderWindow& window) { };
 
 		/// <summary>
 		/// Draws all the elements on the screen. Can be overriden to change the order 
