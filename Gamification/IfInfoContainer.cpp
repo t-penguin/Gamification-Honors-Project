@@ -3,17 +3,11 @@
 
 IfInfoContainer::IfInfoContainer() {}
 
-IfInfoContainer::IfInfoContainer(Screen* parent, sf::Font& font) : Container(parent) {
+IfInfoContainer::IfInfoContainer(Screen* parent, sf::Font& font) : Container(parent, sf::Vector2f(615, 35), sf::Vector2f(20, 665)) {
 	LEVEL_TEXT = "Level: ";
 	SCORE_TEXT = "Score: ";
 	HIGH_SCORE_TEXT = "High Score: ";
 	LIVES_TEXT = "Lives: ";
-
-	background = sf::RectangleShape(sf::Vector2f(615, 35));
-	background.setPosition(20, 665);
-	background.setFillColor(Screen::containerGray);
-	background.setOutlineColor(Screen::blue);
-	background.setOutlineThickness(3);
 
 	int fontSize = 15;
 	int textY = 672;
