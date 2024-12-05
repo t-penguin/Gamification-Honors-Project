@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "ReturnScreen.h"
 #include "MainScreen.h"
 #include "IfGame.h"
 
@@ -26,6 +27,7 @@ void RunWindow(sf::RenderWindow& window) {
     }
 
     Screen* currentScreen = nullptr;
+    ReturnScreen returnScreen(window, font);
     MainScreen mainScreen(window, font);
     IfGame ifGameScreen(window, font);
     currentScreen = &mainScreen;
@@ -33,6 +35,8 @@ void RunWindow(sf::RenderWindow& window) {
 
     sf::Clock clock;
     window.setFramerateLimit(60);
+
+    
     while (window.isOpen())
     {
         sf::Time deltaTime = clock.restart();
@@ -48,13 +52,10 @@ void RunWindow(sf::RenderWindow& window) {
                     window.close();
                     break;
                 case sf::Event::MouseMoved:
-                    currentScreen->update(event, window);
-                    break;
                 case sf::Event::MouseButtonPressed:
-                    currentScreen->update(event, window);
-                    break;
                 case sf::Event::MouseButtonReleased:
                     currentScreen->update(event, window);
+                    returnScreen.update(event, window);
                     break;
             }
         }
@@ -69,14 +70,26 @@ void RunWindow(sf::RenderWindow& window) {
                     mainScreen.setActive(false);
                     mainScreen.resetGameIndex();
                     currentScreen = &ifGameScreen;
+                    ifGameScreen.init();
                     ifGameScreen.setActive(true);
+                    returnScreen.setActive(true);
                     break;
                 // More cases can be added when more minigames are added
             }
         }
 
+        // Leave mini game and return to the main screen
+        if (returnScreen.getReturn()) {
+            currentScreen->setActive(false);
+            currentScreen = &mainScreen;
+            mainScreen.setActive(true);
+            returnScreen.setActive(false);
+            returnScreen.resetReturn();
+        }
+
         window.clear();
         window.draw(*currentScreen);
+        window.draw(returnScreen);
         window.display();
     }
 }
