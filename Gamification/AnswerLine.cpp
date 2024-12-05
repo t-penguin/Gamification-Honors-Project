@@ -73,6 +73,7 @@ void AnswerLine::dropDown(const float dt) {
 	dot.setPosition(dot.getPosition().x, (int)curHeight + dotOffset);
 }
 
+void AnswerLine::resetSpeed() { fallSpeed = 20; }
 void AnswerLine::increaseSpeed(const float speed) { fallSpeed += speed; }
 
 void AnswerLine::reset() {

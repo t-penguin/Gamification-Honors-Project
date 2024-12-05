@@ -21,7 +21,8 @@ class AnswerLine : public Hideable {
 		void setThresholdPosition(const int lowerBound, const int threshold);
 		void setBooleanOperator(const BoolOperator op);
 		void dropDown(const float dt);
-		void increaseSpeed(const float increment = 5);
+		void resetSpeed();
+		void increaseSpeed(const float increment = 6);
 		void reset();
 
 		bool getToDraw() const;
