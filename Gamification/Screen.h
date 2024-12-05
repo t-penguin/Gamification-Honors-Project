@@ -45,10 +45,9 @@ class Screen : public sf::Drawable {
 		void addSprite(sf::Texture& texture);
 
 		/// <summary>
-		/// Adds a shape object to the end of the shapes list.
+		/// Creates and adds a Container object to the end of the containers list. The calling Screen is passed as the parent.
 		/// </summary>
-		/// <param name="shape">: A pointer to the shape object to add.</param>
-		void addContainer(Screen* parent);
+		void addContainer(const sf::Vector2f& size, const sf::Vector2f& pos);
 	public:
 		static sf::Color blue;
 		static sf::Color yellow;

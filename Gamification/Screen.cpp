@@ -27,7 +27,7 @@ void Screen::addText(std::string str, sf::Font& font, unsigned int fontSize) {
 
 void Screen::addSprite() { sprites.emplace_back(); }
 void Screen::addSprite(sf::Texture& texture) { sprites.emplace_back(texture); }
-void Screen::addContainer(Screen* parent) { containers.emplace_back(parent); }
+void Screen::addContainer(const sf::Vector2f& size, const sf::Vector2f& pos) { containers.emplace_back(this, size, pos); }
 
 
 /* Public virtual functions */
