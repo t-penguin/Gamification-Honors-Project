@@ -146,6 +146,7 @@
     <ClCompile Include="IfInfoContainer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScreen.cpp" />
+    <ClCompile Include="ReturnScreen.cpp" />
     <ClCompile Include="Screen.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="IfGame.h" />
     <ClInclude Include="IfInfoContainer.h" />
     <ClInclude Include="MainScreen.h" />
+    <ClInclude Include="ReturnScreen.h" />
     <ClInclude Include="Screen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
