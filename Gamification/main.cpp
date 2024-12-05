@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "MainScreen.h"
 #include "IfGame.h"
 
 void RunWindow(sf::RenderWindow&);
@@ -25,8 +26,10 @@ void RunWindow(sf::RenderWindow& window) {
     }
 
     Screen* currentScreen = nullptr;
+    MainScreen mainScreen(window, font);
     IfGame ifGameScreen(window, font);
-    currentScreen = &ifGameScreen;
+    currentScreen = &mainScreen;
+    mainScreen.setActive(true);
 
     sf::Clock clock;
     window.setFramerateLimit(60);
@@ -53,6 +56,22 @@ void RunWindow(sf::RenderWindow& window) {
                 case sf::Event::MouseButtonReleased:
                     currentScreen->update(event, window);
                     break;
+            }
+        }
+
+        // Leave main screen and go to mini game screen
+        if (mainScreen.getActive()) {
+            switch (mainScreen.getGameIndex())
+            {
+                default:
+                    break;
+                case 0:
+                    mainScreen.setActive(false);
+                    mainScreen.resetGameIndex();
+                    currentScreen = &ifGameScreen;
+                    ifGameScreen.setActive(true);
+                    break;
+                // More cases can be added when more minigames are added
             }
         }
 
