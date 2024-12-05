@@ -7,7 +7,7 @@ Container::Container(Screen* parent, const sf::Vector2f& size, const sf::Vector2
 	texts.reserve(5);
 	background.setSize(size);
 	background.setPosition(pos);
-	background.setOutlineColor(Screen::blue);
+	background.setOutlineColor(Screen::defaultBorder);
 	background.setOutlineThickness(3);
 	background.setFillColor(Screen::containerGray);
 }

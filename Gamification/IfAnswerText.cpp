@@ -10,7 +10,7 @@ IfAnswerText::IfAnswerText(sf::Font& font) : AnswerText(font) {
 
 	background = sf::RectangleShape(sf::Vector2f(200, 100));
 	background.setFillColor(Screen::containerGray);
-	background.setOutlineColor(Screen::blue);
+	background.setOutlineColor(Screen::defaultBorder);
 	background.setOutlineThickness(3);
 	background.setPosition(820, 545);
 
@@ -35,7 +35,7 @@ void IfAnswerText::reset() {
 	threshold = "???";
 	boolOp = "??";
 	setText();
-	background.setOutlineColor(Screen::blue);
+	background.setOutlineColor(Screen::defaultBorder);
 }
 
 void IfAnswerText::setText() {

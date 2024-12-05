@@ -18,7 +18,7 @@ AnswerLine::AnswerLine(int start, int end, int width, float speed) {
 	rightSide.setPosition(32, startY);
 	dot = sf::CircleShape(6);
 	dot.setPosition(32, startY + dotOffset);
-	dot.setOutlineColor(Screen::green);
+	dot.setOutlineColor(Screen::trueColor);
 	dot.setOutlineThickness(3);
 }
 
@@ -38,30 +38,30 @@ void AnswerLine::setBooleanOperator (const BoolOperator op) {
 	{
 		case LessThan:
 		case LessThanOrEqualTo:
-			leftSide.setFillColor(Screen::green);
-			rightSide.setFillColor(Screen::red);
+			leftSide.setFillColor(Screen::trueColor);
+			rightSide.setFillColor(Screen::falseColor);
 			break;
 		case GreaterThan:
 		case GreaterThanOrEqualTo:
-			leftSide.setFillColor(Screen::red);
-			rightSide.setFillColor(Screen::green);
+			leftSide.setFillColor(Screen::falseColor);
+			rightSide.setFillColor(Screen::trueColor);
 			break;
 		case EqualTo:
-			leftSide.setFillColor(Screen::red);
-			rightSide.setFillColor(Screen::red);
+			leftSide.setFillColor(Screen::falseColor);
+			rightSide.setFillColor(Screen::falseColor);
 			break;
 		case NotEqualTo:
-			leftSide.setFillColor(Screen::green);
-			rightSide.setFillColor(Screen::green);
+			leftSide.setFillColor(Screen::trueColor);
+			rightSide.setFillColor(Screen::trueColor);
 			break;
 	}
 
 	if (op % 2 == 0) {
-		dot.setOutlineColor(Screen::green);
-		dot.setFillColor(Screen::green);
+		dot.setOutlineColor(Screen::trueColor);
+		dot.setFillColor(Screen::trueColor);
 	}
 	else {
-		dot.setOutlineColor(Screen::green);
+		dot.setOutlineColor(Screen::trueColor);
 		dot.setFillColor(sf::Color::Transparent);
 	}
 }
