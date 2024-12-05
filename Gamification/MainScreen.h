@@ -12,7 +12,6 @@ class MainScreen : public Screen {
 	public:
 		MainScreen();
 		MainScreen(sf::RenderWindow& window, sf::Font& font);
-		~MainScreen();
 
 		int getGameIndex() const;
 		void resetGameIndex();

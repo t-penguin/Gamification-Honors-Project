@@ -37,7 +37,7 @@ MainScreen::MainScreen(sf::RenderWindow& window, sf::Font& font) {
 	// Application desciption
 	descriptionText->addText("What Is This??", font, 25);
 	curText = &descriptionText->getTextAt(0);
-	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 10);
+	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 5);
 	
 	std::string txt =
 		"Gamification is my contribution to education accessibility.\n"
@@ -53,11 +53,11 @@ MainScreen::MainScreen(sf::RenderWindow& window, sf::Font& font) {
 		"matches the topic you want to practice.";
 	descriptionText->addText(txt, font, 17);
 	curText = &descriptionText->getTextAt(1);
-	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 40);
+	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 35);
 
 	descriptionText->addText("Who Am I??", font, 25);
 	curText = &descriptionText->getTextAt(2);
-	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 305);
+	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 300);
 
 	txt =
 		"Hey! I'm Joseph! At the time of making this, I am a\n"
@@ -71,16 +71,37 @@ MainScreen::MainScreen(sf::RenderWindow& window, sf::Font& font) {
 
 	descriptionText->addText(txt, font, 17);
 	curText = &descriptionText->getTextAt(3);
-	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 335);
+	curText->setPosition(descriptionText->getPosition().x + 10, descriptionText->getPosition().y + 330);
+
+	// If-Statement Game Text and Button
+	ifGameSummary->addText("Match The Range", font, 25);
+	curText = &ifGameSummary->getTextAt(0);
+	curText->setPosition(ifGameSummary->getPosition().x + 10, ifGameSummary->getPosition().y + 5);
+
+	txt =
+		"Waves of people are approaching my fortress and I need your help figuring out who to let\n"
+		"in. I have these special goggles that show our allies in blue and enemies in red, but\n"
+		"wearing it gives me a headache. Do you think you can put it on and help me? I'll show you\n"
+		"what to press to let in the right people. It's helpful that they're all wearing numbers...\n";
+	ifGameSummary->addText(txt, font, 17);
+	curText = &ifGameSummary->getTextAt(1);
+	curText->setPosition(ifGameSummary->getPosition().x + 10, ifGameSummary->getPosition().y + 35);
+
+	txt =
+		"Categories: If-Statements, Number Lines, Ranges";
+	ifGameSummary->addText(txt, font, 17);
+	curText = &ifGameSummary->getTextAt(2);
+	curText->setPosition(ifGameSummary->getPosition().x + 10, ifGameSummary->getPosition().y + 120);
+
+	size.x = 50;
+	size.y = 35;
+	pos.x = ifGameSummary->getPosition().x + ifGameSummary->getSize().x - size.x - 10;
+	pos.y = ifGameSummary->getPosition().y + ifGameSummary->getSize().y - size.y - 10;
+	ifGameSummary->addButton("Play", 0, pos, size, font);
 
 	descriptionText->show();
 	ifGameSummary->show();
 	switchGameSummary->show();
-}
-
-MainScreen::~MainScreen() {
-	delete ifGameSummary;
-	delete switchGameSummary;
 }
 
 int MainScreen::getGameIndex() const { return gameIndex; }
