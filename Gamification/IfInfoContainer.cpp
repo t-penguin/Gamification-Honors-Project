@@ -9,20 +9,21 @@ IfInfoContainer::IfInfoContainer(Screen* parent, sf::Font& font) : Container(par
 	HIGH_SCORE_TEXT = "High Score: ";
 	LIVES_TEXT = "Lives: ";
 
-	int fontSize = 15;
-	int textY = 672;
+	int fontSize = 20;
+	int textY = 669;
 	addText(LEVEL_TEXT, font, fontSize);
 	texts.at(0).setPosition(25, textY);
 	addText(SCORE_TEXT, font, fontSize);
-	texts.at(1).setPosition(225, textY);
+	texts.at(1).setPosition(215, textY);
 	addText(HIGH_SCORE_TEXT, font, fontSize);
-	texts.at(2).setPosition(325, textY);
+	texts.at(2).setPosition(355, textY);
 	addText(LIVES_TEXT, font, fontSize);
 	texts.at(3).setPosition(550, textY);
+	texts.at(3).setFillColor(Screen::falseColor);
 }
 
 void IfInfoContainer::updateLevel(const int level) {
-	texts.at(0).setString(LEVEL_TEXT + std::to_string(level));
+	texts.at(0).setString(LEVEL_TEXT + std::to_string(level) +  " / 20");
 }
 
 void IfInfoContainer::updateScore(const int score) {
