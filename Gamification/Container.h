@@ -15,7 +15,7 @@ class Container : public Hideable {
 		std::vector<sf::Text> texts;
 	public:
 		Container();
-		Container(Screen* parent);
+		Container(Screen* parent, const sf::Vector2f& size, const sf::Vector2f& pos);
 		void reserveSizeForButtons(int numButtons);
 		void setPosition(sf::Vector2f pos);
 		void setSize(int x, int y);
@@ -25,6 +25,8 @@ class Container : public Hideable {
 		void addText(std::string txt, sf::Font& font, int fontSize = 15);
 		void addButton(std::string txt, int id, sf::Vector2f pos, sf::Vector2f size, sf::Font& font);
 
+		sf::Vector2f getSize() const;
+		sf::Vector2f getPosition() const;
 		Button& getButtonAt(int index);
 		sf::Text& getTextAt(int index);
 

@@ -2,9 +2,14 @@
 
 Container::Container() { }
 
-Container::Container(Screen* parent) {
+Container::Container(Screen* parent, const sf::Vector2f& size, const sf::Vector2f& pos) {
 	this->parent = parent;
 	texts.reserve(5);
+	background.setSize(size);
+	background.setPosition(pos);
+	background.setOutlineColor(Screen::blue);
+	background.setOutlineThickness(3);
+	background.setFillColor(Screen::containerGray);
 }
 
 void Container::reserveSizeForButtons(int numButtons) { buttons.reserve(numButtons); }
@@ -23,6 +28,8 @@ void Container::addButton(std::string txt, int id, sf::Vector2f pos, sf::Vector2
 	buttons.emplace_back(parent, id, txt, pos, size, font);
 }
 
+sf::Vector2f Container::getSize() const { return background.getSize(); }
+sf::Vector2f Container::getPosition() const { return background.getPosition(); }
 Button& Container::getButtonAt(int index) { return buttons.at(index); }
 sf::Text& Container::getTextAt(int index) { return texts.at(index); }
 
