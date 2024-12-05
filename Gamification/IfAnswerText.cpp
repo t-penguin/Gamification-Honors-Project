@@ -12,7 +12,7 @@ IfAnswerText::IfAnswerText(sf::Font& font) : AnswerText(font) {
 	background.setFillColor(Screen::containerGray);
 	background.setOutlineColor(Screen::blue);
 	background.setOutlineThickness(3);
-	background.setPosition(820, 500);
+	background.setPosition(820, 545);
 
 	threshold = "???";
 	boolOp = "??";
@@ -35,7 +35,6 @@ void IfAnswerText::reset() {
 	threshold = "???";
 	boolOp = "??";
 	setText();
-	background.setPosition(820, 500);
 	background.setOutlineColor(Screen::blue);
 }
 
