@@ -135,15 +135,6 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 }
 
 
-/* Destructor */
-
-IfGame::~IfGame() {
-	delete playArea;
-	delete choiceButtons;
-	delete howTo;
-}
-
-
 /* Screen overrides */
 
 void IfGame::clickButton(int id) {
@@ -427,4 +418,15 @@ void IfGame::reset() {
 	playArea->setOutlineColor(Screen::defaultBorder);
 	howTo->setOutlineColor(Screen::defaultBorder);
 	choiceButtons->setOutlineColor(Screen::defaultBorder);
+}
+
+void IfGame::init() {
+	reset();
+	answerLine.resetSpeed();
+	answerText.hide();
+	info.hide();
+	info.reset();
+	choiceButtons->hide();
+	buttons.at(1).hide();
+	buttons.at(0).show();
 }

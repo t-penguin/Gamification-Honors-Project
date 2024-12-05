@@ -103,7 +103,7 @@ class IfGame : public Screen {
 		/// <param name="font">: The font to use for all texts.</param>
 		IfGame(sf::RenderWindow& window, sf::Font& font);
 
-		~IfGame();
+		void init();
 
 		/// <summary>
 		/// Defines what to do for specific button IDs. Should be called by a button using its parent member.
