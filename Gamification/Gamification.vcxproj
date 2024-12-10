@@ -159,6 +159,7 @@
     <ClInclude Include="IfAnswerText.h" />
     <ClInclude Include="IfGame.h" />
     <ClInclude Include="IfInfoContainer.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="MainScreen.h" />
     <ClInclude Include="ReturnScreen.h" />
     <ClInclude Include="Screen.h" />

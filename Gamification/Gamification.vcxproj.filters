@@ -86,5 +86,8 @@
     <ClInclude Include="ReturnScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
