@@ -144,6 +144,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="IfGame.cpp" />
     <ClCompile Include="IfInfoContainer.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScreen.cpp" />
     <ClCompile Include="ReturnScreen.cpp" />
@@ -159,7 +160,7 @@
     <ClInclude Include="IfAnswerText.h" />
     <ClInclude Include="IfGame.h" />
     <ClInclude Include="IfInfoContainer.h" />
-    <ClInclude Include="logger.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="MainScreen.h" />
     <ClInclude Include="ReturnScreen.h" />
     <ClInclude Include="Screen.h" />
