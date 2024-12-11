@@ -3,6 +3,7 @@
 #include "ReturnScreen.h"
 #include "MainScreen.h"
 #include "IfGame.h"
+#include "Logger.h"
 
 void RunWindow(sf::RenderWindow&);
 
@@ -12,6 +13,7 @@ int main()
      * VideoMode(width, height)
      * string window title */
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Gamification");
+    Logger::init();
 
     RunWindow(window);
 
@@ -22,7 +24,7 @@ void RunWindow(sf::RenderWindow& window) {
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
     {
-        std::cout << "Could not load font: Arial\n";
+        Logger::log("Could not load font: Arial\n");
         return;
     }
 

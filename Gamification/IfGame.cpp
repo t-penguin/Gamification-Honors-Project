@@ -1,5 +1,5 @@
 #include "IfGame.h"
-#include <iostream>
+#include "Logger.h"
 
 /* Constructors */
 
@@ -62,7 +62,7 @@ IfGame::IfGame(sf::RenderWindow& window, sf::Font& font) {
 	// Number line image
 	numLineTexture = sf::Texture();
 	if (!numLineTexture.loadFromFile("NumberLine.png")) {
-		std::cout << "Could not load number line texture\n";
+		Logger::log("Could not load number line texture\n");
 		return;
 	}
 	addSprite(numLineTexture);
@@ -171,7 +171,7 @@ void IfGame::clickButton(int id) {
 	}
 
 	// Button with no function
-	std::cout << "Clicked button with ID " << id << std::endl;
+	Logger::log("Clicked button with ID " + std::to_string(id) + "\n");
 }
 
 void IfGame::update(const float dt, sf::RenderWindow& window) {
@@ -189,7 +189,7 @@ void IfGame::update(const float dt, sf::RenderWindow& window) {
 		return;
 
 	if (answerLine.isAtBottom()) {
-		std::cout << "Answer Line has reached the bottom\n";
+		Logger::log("Answer Line has reached the bottom\n");
 		submitAnswer();
 	}
 	else {
@@ -273,7 +273,7 @@ void IfGame::generateChoices() {
 
 void IfGame::populateNumberLine() {
 	if (lowerBound < -99 || lowerBound > 84) {
-		std::cout << "Bounds not set properly, can't populate number line.\n";
+		Logger::log("Bounds not set properly, can't populate number line.\n");
 		return;
 	}
 
@@ -293,13 +293,13 @@ void IfGame::submitAnswer() {
 	answerLine.reset();
 	if (playerThresholdID == thresholdOptionIndexes.at(correctThresholdIndex) + 2
 		&& playerOperatorID == operatorOptionIndexes.at(correctOperatorIndex) + 2) {
-		std::cout << "Correct!\n";
+		Logger::log("Correct!\n");
 		onCorrect();
 		score++;
 		info.updateScore(score);
 	}
 	else {
-		std::cout << "Wrong!\n";
+		Logger::log("Wrong!\n");
 		onWrong();
 		lives--;
 		info.updateLives(lives);
@@ -317,7 +317,7 @@ void IfGame::submitAnswer() {
 	}
 
 	info.updateLevel(currentLevel);
-	std::cout << "Moving on to level " << currentLevel << std::endl;
+	Logger::log("Moving on to level " + std::to_string(currentLevel) + "\n");
 	answerLine.increaseSpeed();
 	delayRemaining = roundDelay;
 }
@@ -348,7 +348,7 @@ std::string IfGame::BoolOperatorToString(BoolOperator op) const {
 }
 
 void IfGame::startGame() {
-	std::cout << "Starting game!\n";
+	Logger::log("Starting game!\n");
 
 	// Hide the start button
 	buttons.at(0).hide();
@@ -361,6 +361,7 @@ void IfGame::startGame() {
 	info.updateLevel(currentLevel);
 	score = 0;
 	info.updateScore(score);
+	info.updateHighScore(Logger::getHighScore());
 	lives = 3;
 	info.updateLives(lives);
 	info.setOutlineColor(Screen::defaultBorder);
@@ -371,12 +372,19 @@ void IfGame::startGame() {
 
 void IfGame::endGame(bool finished) {
 	if (finished) {
-		std::cout << "You won with a score of " << score << "!\n";
+		Logger::log("You won with a score of " + std::to_string(score) + "!\n");
 	}
 	else {
-		std::cout << "You lost... You made it to level " << currentLevel;
-		std::cout << " with a score of " << score << "...\n";
+		Logger::log("You lost... You made it to level " + std::to_string(currentLevel));
+		Logger::log(" with a score of " + std::to_string(score) + "...\n");
 	}
+
+	int oldHighScore = Logger::getHighScore();
+	if (score > oldHighScore) {
+		info.updateHighScore(score);
+		Logger::setHighScore(score);
+	}
+		
 }
 
 void IfGame::startRound() {
