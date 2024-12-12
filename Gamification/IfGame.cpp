@@ -142,9 +142,7 @@ void IfGame::clickButton(int id) {
 	if (id == 0) {
 		startGame();
 		return;
-	}
-
-	// TODO: Button to return to the main screen 
+	} 
 
 	if (!gameInProgress)
 		return;
@@ -371,6 +369,8 @@ void IfGame::startGame() {
 }
 
 void IfGame::endGame(bool finished) {
+	gameInProgress = false;
+
 	if (finished) {
 		Logger::log("You won with a score of " + std::to_string(score) + "!\n");
 	}
