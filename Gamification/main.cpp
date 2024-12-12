@@ -67,7 +67,6 @@ void RunWindow(sf::RenderWindow& window) {
             switch (mainScreen.getGameIndex())
             {
                 default:
-                    Logger::log("Game with index " + std::to_string(mainScreen.getGameIndex()) + " not implemented yet...");
                     break;
                 case 0:
                     mainScreen.setActive(false);
