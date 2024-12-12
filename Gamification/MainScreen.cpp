@@ -99,6 +99,32 @@ MainScreen::MainScreen(sf::RenderWindow& window, sf::Font& font) {
 	pos.y = ifGameSummary->getPosition().y + ifGameSummary->getSize().y - size.y - 10;
 	ifGameSummary->addButton("Play", 0, pos, size, font);
 
+	// Switch-Statement Game Text and Button
+	switchGameSummary->addText("Sort The Input", font, 25);
+	curText = &switchGameSummary->getTextAt(0);
+	curText->setPosition(switchGameSummary->getPosition().x + 10, switchGameSummary->getPosition().y + 5);
+
+	txt =
+		"An attack on my fortress has left some holes in my roof. Now there's a bunch of input text\n"
+		"leaking in. Different input must be handled accordingly so I brought a few buckets to sort\n"
+		"them into. Unfortunately, I don't have enough hands for this. Think you can help me get\n"
+		"this sorted? I have a handy switch statement to tell us where each input should go.\n";
+	switchGameSummary->addText(txt, font, 17);
+	curText = &switchGameSummary->getTextAt(1);
+	curText->setPosition(switchGameSummary->getPosition().x + 10, switchGameSummary->getPosition().y + 35);
+
+	txt =
+		"Categories: Switch-Statements";
+	switchGameSummary->addText(txt, font, 17);
+	curText = &switchGameSummary->getTextAt(2);
+	curText->setPosition(switchGameSummary->getPosition().x + 10, switchGameSummary->getPosition().y + 120);
+
+	size.x = 50;
+	size.y = 35;
+	pos.x = switchGameSummary->getPosition().x + switchGameSummary->getSize().x - size.x - 10;
+	pos.y = switchGameSummary->getPosition().y + switchGameSummary->getSize().y - size.y - 10;
+	switchGameSummary->addButton("Soon", 1, pos, size, font);
+
 	descriptionText->show();
 	ifGameSummary->show();
 	switchGameSummary->show();
